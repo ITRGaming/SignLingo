@@ -3,7 +3,10 @@ from cvzone.HandTrackingModule import HandDetector
 from cvzone.ClassificationModule import Classifier
 import numpy as np
 import math
+import pyttsx3
 
+text_speech = pyttsx3.init()
+play = ""
 cap = cv2.VideoCapture(0)
 detector = HandDetector(maxHands=1)
 classifier = Classifier("Model/keras_model.h5", "Model/labels.txt")
@@ -14,7 +17,8 @@ imgSize = 300
 folder = "Data/C"
 counter = 0
 labels = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V",
-          "W", "X", "Y", "Z"]
+          "W", "X", "Y", "Z", ""]
+
 
 while True:
     success, img = cap.read()
@@ -55,9 +59,20 @@ while True:
                       cv2.FILLED)
         cv2.putText(imgOutput, labels[index], (x, y - 27), cv2.FONT_HERSHEY_COMPLEX, 1.7, (255, 255, 255), 2)
         cv2.rectangle(imgOutput, (x-offset, y-offset), (x + w+offset, y + h+offset), (255, 0, 255), 4)
+        play = labels[index]
+
+    else:
+        index = 26
+        play = labels[index]
+        cv2.imshow("Image", imgOutput)
+        cv2.waitKey(1)
 
         # cv2.imshow("ImageCrop", imgCrop)
         # cv2.imshow("ImageWhite", imgWhite)
 
     cv2.imshow("Image", imgOutput)
     cv2.waitKey(1)
+
+    text_speech.say(play)
+    text_speech.runAndWait()
+    
